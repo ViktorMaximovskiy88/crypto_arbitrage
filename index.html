@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arbitrage Bot Test</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="select2/css/select2.min.css">
+  <link rel="stylesheet" href="fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="toastr/toastr.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="adminlte.min.css">
+  
+</head>
+<body class="dark-mode hold-transition sidebar-mini">
+<div class="wrapper">
+  <div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Arbitrage Bot Test</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Help</a></li>
+              <li class="breadcrumb-item active">About</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Exchange1</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+						  <select class="form-control select2" id='exchange1' style="width: 100%;">
+							<option selected="selected">Kucoin</option>
+							<option>Kraken</option>
+							<option>Binance</option>
+							<option>EXMO</option>
+							<option>Coinbase</option>
+							<option>Bitfinex</option>
+						  </select>
+						</div>						
+					</div>
+				</div>
+                <div class="row">
+                  <div class="col-sm-6 col-6">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
+                      <h5 class="description-header" id='cur_usdt'>0.00</h5>
+                      <span class="description-text">TOTAL USDT</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-6 col-6">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
+                      <h5 class="description-header" id='cur_btc'>0.00</h5>
+                      <span class="description-text">TOTAL BTC</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col (left) -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Exchange2</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class='row'>
+				 <div class="col-md-12">
+						<div class="form-group">
+						  <select class="form-control select2" id='exchange2' style="width: 100%;">
+							<option>Kucoin</option>
+							<option selected>Kraken</option>
+							<option>Binance</option>
+							<option>EXMO</option>
+							<option>Coinbase</option>
+							<option>Bitfinex</option>
+						  </select>
+						</div>						
+					</div>					
+				</div>
+				<div class='row'>
+					<div class="col-md-6">
+						<div class="form-group">
+						  <label>Coin1 network</label>
+						  <input type="text" class="form-control" id="coin1_net" placeholder="coin1 network name(e.g Polygon)">
+						</div>						
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						  <label>Coin2 network</label>
+						  <input type="text" class="form-control" id="coin2_net" placeholder="coin2 network name(e.g TRC20)">
+						</div>						
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						  <label>Coin1 network additional information</label>
+						  <input type="text" class="form-control" id="coin1_addinf" placeholder="tag or key...">
+						</div>						
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+						  <label>Coin2 network additional information</label>
+						  <input type="text" class="form-control" id="coin2_addinf" placeholder="tag or key...">
+						</div>						
+					</div>
+				</div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col (right) -->
+        </div>
+		<div class="overlay" id='loading' style='position:absolute; left:calc(50% - 15px);top:calc(50% - 15px); z-index:99; display:none'><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
+		<div class="row">
+          <div class="col-12">
+            <!-- Custom Tabs -->
+            <div class="card">
+              <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3">Main Settings</h3>
+                <ul class="nav nav-pills ml-auto p-2">
+                  <li class="nav-item"><a class="btn btn-app" id='btn_start'>
+                  <i class="fas fa-play"></i>Start trading</a></li>
+                  
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+			    <div class='row'>
+					<div class="col-md-3">
+						<div class="form-group">
+						  <label>Coin1</label>
+						  <input type="text" class="form-control" id="coin1_sel" value='SYN' placeholder="coin1 crypto currency.">
+						</div>						
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+						  <label>Coin2</label>
+						  <input type="text" class="form-control" id="coin2_sel" value='BTT' placeholder="coin2 crypto currency.">
+						</div>						
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+						  <label>Buy with</label>
+						  <select class="form-control select2" id='main_sel' style="width: 100%;">
+							<option selected="selected">USDT</option>
+							<option>BTC</option>
+						  </select>
+						</div>						
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+						  <label>Amount</label>
+						  <input type="text" class="form-control" id="amount" placeholder="Amount to trade(e.g 50)">
+						</div>						
+					</div>
+				</div>
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab_1">
+                    <div class="progress">
+					  <div class="progress-bar bg-primary progress-bar-striped" id='status_bar' role="progressbar"
+						   aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">						
+					  </div>
+					 
+					</div>
+					<span id='status_message'>0% Complete</span>
+                  </div>                 
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- ./card -->
+          </div>
+          <!-- /.col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<script src="jquery.min.js"></script>
+<script src="select2/js/select2.full.min.js"></script>
+<script src="toastr/toastr.min.js"></script>
+</body>
+<script>
+	function show_loading() {
+		$("#loading").css("display","inline");
+	}
+	function hide_loading() {
+		$("#loading").css("display","none");
+	}
+	$(function () {
+		$('.select2').select2()
+	});
+	$("#btn_start").click(function() {
+		var coin1 = $("#coin1_sel").val();
+		var coin2 = $("#coin2_sel").val();
+		var main = $("#main_sel").val();
+		var amount = $("#amount").val();
+		var coin1_net = $("#coin1_net").val();
+		var coin2_net = $("#coin2_net").val();
+		var coin1_addinf = $("#coin1_addinf").val();
+		var coin2_addinf = $("#coin2_addinf").val();
+		
+		if(coin1 == main) {
+			toastr.error('Coin1 cannot be the same as the purchase currency.');
+			return;
+		}
+		if(coin2 == main) {
+			toastr.error('Coin2 cannot be the same as the purchase currency.');
+			return;
+		}
+		if(coin1 == coin2) {
+			toastr.error('Coin1, 2 cannot be the same.');
+			return;
+		}
+		if(amount <= 0) {
+			toastr.error('Amount has to be greater than 0.');
+			return;
+		}
+		var exchange1 = $("#exchange1").val();
+		var exchange2 = $("#exchange2").val();
+		if(exchange1 == exchange2) {
+			toastr.error('Exchanges can not be the same.');
+			return;
+		}
+		show_loading();
+		$.ajax({url: "http://localhost:8080/api/balance/", type:"GET", data:{"exchange":exchange1}, success: function(result){
+			hide_loading();			
+			if(result == "error") {
+				toastr.error('Error found while getting balance.');
+				return;
+			}
+			var usdt = (result.USDT == undefined) ? 0 : result.USDT.free;
+			var btc = (result.BTC == undefined) ? 0 : result.BTC.free;
+			$("#cur_usdt").html(usdt.toFixed(3));
+			$("#cur_btc").html(btc.toFixed(4));
+			
+			if(main == "USDT") {
+				if(usdt < amount) {
+					toastr.error('Unable to continue, Insufficient USDT funds in ' + exchange1);
+					$("#status_bar").css("width","0%");
+					return;
+				}
+			}
+			if(main == "btc") {
+				if(btc < amount) {
+					toastr.error('Unable to continue, Insufficient BTC funds in ' + exchange1);
+					$("#status_bar").css("width","0%");
+					return;
+				}
+			}
+			$("#status_bar").css("width","10%");
+			$("#status_message").html("Get " + exchange1 + " balance successed.");
+
+			$.ajax({url: "http://localhost:8080/api/buycoin1/", type:"GET", data:{"exchange":exchange1, "coin1":coin1, "amount":amount,"main":main}, success: function(result){
+				cur = $("#status_message").html();
+				if(result == "error") {
+					toastr.error('Error found while buying '+coin1);
+					$("#status_bar").css("width","0%");
+					$("#status_message").html(cur + "<br>Error found while buying "+coin1);
+					return;	
+				}
+				$("#status_bar").css("width","30%");
+				$("#status_message").html(cur + "<br>"+coin1+" buying successed.");
+				
+				$.ajax({url: "http://localhost:8080/api/withdraw_coin/", type:"GET", data:{"exchange1":exchange1,"exchange2":exchange2, "coin":coin1, "amount":amount,"main":main, "network":coin1_net,"addinf":coin1_addinf}, success: function(result){
+					cur = $("#status_message").html();
+					if(result == "error") {
+						toastr.error('Error found while withdrawing '+coin1);
+						$("#status_bar").css("width","0%");
+						$("#status_message").html(cur + "<br>Error found while withdrawing "+coin1);
+						return;	
+					}
+					$("#status_bar").css("width","50%");
+					$("#status_message").html(cur + "<br>"+coin1+" withdraw successed.");
+					
+					$.ajax({url: "http://localhost:8080/api/conv_coins/", type:"GET", data:{"exchange":exchange2,"coin1":coin1, "coin2":coin2,"amount":amount}, success: function(result){
+						cur = $("#status_message").html();
+						
+						if(result == "error") {
+							toastr.error('Error found while converting '+coin1 + ' to ' + coin2);
+							$("#status_bar").css("width","0%");
+							$("#status_message").html(cur + "<br>Error found while converting "+coin1+ ' to ' + coin2);
+							return;	
+						}
+						$("#status_bar").css("width","70%");
+						$("#status_message").html(cur + "<br>"+coin1+" convert successed.");
+						amount_conv = result;
+						$.ajax({url: "http://localhost:8080/api/withdraw_coin/", type:"GET", data:{"exchange1":exchange2,"exchange2":exchange1, "coin":coin2, "amount":amount_conv,"main":main, "network":coin2_net,"addinf":coin2_addinf}, success: function(result){
+							cur = $("#status_message").html();
+							if(result == "error") {
+								toastr.error('Error found while withdrawing '+coin2);
+								$("#status_bar").css("width","0%");
+								$("#status_message").html(cur + "<br>Error found while withdrawing "+coin2);
+								return;	
+							}
+							$("#status_bar").css("width","90%");
+							$("#status_message").html(cur + "<br>"+coin2+" withdraw successed.");
+							
+							$.ajax({url: "http://localhost:8080/api/sellcoin2/", type:"GET", data:{"exchange":exchange1,"coin2":coin2, "amount":amount_conv,"main":main}, success: function(result){
+								cur = $("#status_message").html();
+								if(result == "error") {
+									toastr.error('Error found while selling '+coin2);
+									$("#status_bar").css("width","0%");
+									$("#status_message").html(cur + "<br>Error found while selling "+coin2);
+									return;	
+								}
+								$("#status_bar").css("width","100%");
+								$("#status_message").html(cur + "<br>"+coin2+" sell successed.");
+							}});
+						}});
+					}});
+				}});				
+			}});
+		}});
+	});
+</script>
+</html>

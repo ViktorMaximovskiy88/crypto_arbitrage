@@ -1,0 +1,5 @@
+@echo
+
+start cmd.exe /k "node server.js"
+
+/k "call node server.js" pause
